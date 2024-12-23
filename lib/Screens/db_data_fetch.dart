@@ -43,8 +43,8 @@ class _DbDataFetchState extends State<DbDataFetch> {
               itemCount: mData.length,
               itemBuilder: (_, index) {
                 return ListTile(
-                  title: Text(mData[index]['note_title']),
-                  subtitle: Text(mData[index]['note_description']),
+                  title: Text(mData[index][DBHelper.COLUMN_NOTE_TITLE]),
+                  subtitle: Text(mData[index][DBHelper.COLUMN_NOTE_DESC]),
                   trailing: SizedBox(
                     width: 100,
                     child: Row(
@@ -54,13 +54,13 @@ class _DbDataFetchState extends State<DbDataFetch> {
                               dbHelper.updateNote(
                                   updatedTitle: "updatedTitle",
                                   updatedDescription: "updatedDescription",
-                                  id: mData[index]["note_id"]);
+                                  id: mData[index][DBHelper.COLUMN_NOTE_ID]);
                               getNotes();
                             },
                             icon: const Icon(Icons.edit)),
                         IconButton(
                           onPressed: () {
-                            dbHelper.deleteNote(id: mData[index]['note_id']);
+                            dbHelper.deleteNote(id: mData[index][DBHelper.COLUMN_NOTE_ID]);
                             getNotes();
                           },
                           icon: const Icon(

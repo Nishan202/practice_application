@@ -4,6 +4,12 @@ import 'package:sqflite/sqflite.dart';
 
 class DBHelper {
 
+  // glbal static variable for table and columns
+  static final String NOTE_TABLE = 'note';
+  static final String COLUMN_NOTE_ID = 'note_id';
+  static final String COLUMN_NOTE_TITLE = 'note_title';
+  static final String COLUMN_NOTE_DESC = 'note_description';
+
 // to privatize the constructor
   DBHelper._();
 
@@ -30,7 +36,7 @@ class DBHelper {
     String dbPath = join(appDir.path, "mainDB.db");
     return await openDatabase(dbPath,version: 1, onCreate: (db , version){
       db.execute(
-        'CREATE TABLE NOTE (note_id INTEGER PRIMARY KEY AUTOINCREMENT, note_title TEXT, note_description TEXT)'
+        'CREATE TABLE $NOTE_TABLE ($COLUMN_NOTE_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_NOTE_TITLE TEXT, $COLUMN_NOTE_DESC TEXT)'
       );
     });
   }
@@ -39,9 +45,9 @@ class DBHelper {
   Future<bool> addNote ({required String noteTitle, required String noteDescription}) async {
     var db = await getDB();
 
-    int rowsEffected = await db.insert("note", {
-      "note_title" : noteTitle,
-      "note_description" : noteDescription
+    int rowsEffected = await db.insert(NOTE_TABLE, {
+      COLUMN_NOTE_TITLE : noteTitle,
+      COLUMN_NOTE_DESC : noteDescription
     });
     return rowsEffected > 0;
   }
@@ -50,10 +56,10 @@ class DBHelper {
   Future<bool> updateNote ({required String updatedTitle, required String updatedDescription, required int id}) async {
     var db = await getDB();
 
-    int rowsEffected = await db.update("note", {
-      "note_title" : updatedTitle,
-      "note_description" : updatedDescription
-    }, where: "note_id = $id");
+    int rowsEffected = await db.update(NOTE_TABLE, {
+      COLUMN_NOTE_TITLE : updatedTitle,
+      COLUMN_NOTE_DESC : updatedDescription
+    }, where: "$COLUMN_NOTE_ID = $id");
     return rowsEffected > 0;
   }
 
@@ -61,14 +67,14 @@ class DBHelper {
   Future<bool> deleteNote ({required int id}) async {
     var db = await getDB();
 
-    int rowsEffected = await db.delete("note" , where: "note_id = $id");
+    int rowsEffected = await db.delete(NOTE_TABLE , where: "$COLUMN_NOTE_ID = $id");
     return rowsEffected > 0;
   }
 
 // Fetch data from Database
   Future<List<Map<String, dynamic>>> fetchAllData() async {
     var db = await getDB();
-    List<Map<String, dynamic>> mData = await db.query("note");
+    List<Map<String, dynamic>> mData = await db.query(NOTE_TABLE);
 
     return mData;
   }
