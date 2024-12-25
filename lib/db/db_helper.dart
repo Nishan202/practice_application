@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:practice_application/db/data_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBHelper {
@@ -42,24 +43,18 @@ class DBHelper {
   }
 
 // Add data in Database
-  Future<bool> addNote ({required String noteTitle, required String noteDescription}) async {
+  Future<bool> addNote ({required DataModel newNote}) async {
     var db = await getDB();
 
-    int rowsEffected = await db.insert(NOTE_TABLE, {
-      COLUMN_NOTE_TITLE : noteTitle,
-      COLUMN_NOTE_DESC : noteDescription
-    });
+    int rowsEffected = await db.insert(NOTE_TABLE, newNote.toMap());
     return rowsEffected > 0;
   }
 
 // Update data in Database
-  Future<bool> updateNote ({required String updatedTitle, required String updatedDescription, required int id}) async {
+  Future<bool> updateNote ({required DataModel updateNote}) async {
     var db = await getDB();
 
-    int rowsEffected = await db.update(NOTE_TABLE, {
-      COLUMN_NOTE_TITLE : updatedTitle,
-      COLUMN_NOTE_DESC : updatedDescription
-    }, where: "$COLUMN_NOTE_ID = $id");
+    int rowsEffected = await db.update(NOTE_TABLE, updateNote.toMap(), where: "$COLUMN_NOTE_ID = ${updateNote.id}");
     return rowsEffected > 0;
   }
 
@@ -72,10 +67,15 @@ class DBHelper {
   }
 
 // Fetch data from Database
-  Future<List<Map<String, dynamic>>> fetchAllData() async {
+  Future<List<DataModel>> fetchAllData() async {
     var db = await getDB();
     List<Map<String, dynamic>> mData = await db.query(NOTE_TABLE);
+    List<DataModel> mNotes = [];
+    for(int i=0; i<mData.length; i++){
+      DataModel dataModel = DataModel.fromMap(mData[i]);
+      mNotes.add(dataModel);
+    }
 
-    return mData;
+    return mNotes;
   }
 }

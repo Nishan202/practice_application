@@ -3,7 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:practice_application/Widgets/custom_textfield.dart';
 import 'package:practice_application/Widgets/modal_bottomsheet.dart';
-import 'package:practice_application/db_helper.dart';
+import 'package:practice_application/db/data_model.dart';
+import 'package:practice_application/db/db_helper.dart';
 
 class DbDataFetch extends StatefulWidget {
   const DbDataFetch({super.key});
@@ -16,7 +17,10 @@ class _DbDataFetchState extends State<DbDataFetch> {
   // Declares the global variables here
 
   DBHelper dbHelper = DBHelper.getInstense();
-  List<Map<String, dynamic>> mData = [];
+  List<DataModel> mData = [];
+
+  TextEditingController updatedTitle = TextEditingController();
+  TextEditingController updatedDesc = TextEditingController();
 
   @override
   void initState() {
@@ -43,24 +47,21 @@ class _DbDataFetchState extends State<DbDataFetch> {
               itemCount: mData.length,
               itemBuilder: (_, index) {
                 return ListTile(
-                  title: Text(mData[index][DBHelper.COLUMN_NOTE_TITLE]),
-                  subtitle: Text(mData[index][DBHelper.COLUMN_NOTE_DESC]),
+                  title: Text(mData[index].title),
+                  subtitle: Text(mData[index].description),
                   trailing: SizedBox(
                     width: 100,
                     child: Row(
                       children: [
                         IconButton(
                             onPressed: () {
-                              dbHelper.updateNote(
-                                  updatedTitle: "updatedTitle",
-                                  updatedDescription: "updatedDescription",
-                                  id: mData[index][DBHelper.COLUMN_NOTE_ID]);
+                              dbHelper.updateNote(updateNote: DataModel(id: mData[index].id, title: updatedTitle.text, description: updatedDesc.text));
                               getNotes();
                             },
                             icon: const Icon(Icons.edit)),
                         IconButton(
                           onPressed: () {
-                            dbHelper.deleteNote(id: mData[index][DBHelper.COLUMN_NOTE_ID]);
+                            dbHelper.deleteNote(id: mData[index].id);
                             getNotes();
                           },
                           icon: const Icon(

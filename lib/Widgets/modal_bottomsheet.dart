@@ -2,7 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:practice_application/Widgets/custom_textfield.dart';
-import 'package:practice_application/db_helper.dart';
+import 'package:practice_application/db/data_model.dart';
+import 'package:practice_application/db/db_helper.dart';
 
 class ModalBottomsheet extends StatefulWidget {
 
@@ -19,7 +20,7 @@ class _ModalBottomsheetState extends State<ModalBottomsheet> {
 
   DBHelper dbHelper = DBHelper.getInstense();
 
-  List<Map<String, dynamic>> mData = [];
+  List<DataModel> mData = [];
 
   @override
   void initState() {
@@ -70,7 +71,7 @@ class _ModalBottomsheetState extends State<ModalBottomsheet> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               OutlinedButton(onPressed: () async {
-                bool check = await dbHelper.addNote(noteTitle: titleController.text, noteDescription: desController.text);
+                bool check = await dbHelper.addNote(newNote: DataModel(title: titleController.text, description: desController.text));
                 if(check){
                   getNotes();
                   log(check.toString());
