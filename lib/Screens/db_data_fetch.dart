@@ -55,8 +55,13 @@ class _DbDataFetchState extends State<DbDataFetch> {
                       children: [
                         IconButton(
                             onPressed: () {
-                              dbHelper.updateNote(updateNote: DataModel(id: mData[index].id, title: updatedTitle.text, description: updatedDesc.text));
-                              getNotes();
+                              // dbHelper.updateNote(updateNote: DataModel(id: mData[index].id, title: updatedTitle.text, description: updatedDesc.text));
+                              // getNotes();
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (_) {
+                                    return ModalBottomsheet();
+                                  });
                             },
                             icon: const Icon(Icons.edit)),
                         IconButton(
