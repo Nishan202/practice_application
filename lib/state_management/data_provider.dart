@@ -14,4 +14,12 @@ class DataProvider extends ChangeNotifier{
     _count++;
     notifyListeners();
   }
+
+  void valueDecrement(){
+    // data changed
+    if(_count>0){
+      _count--;
+    }
+    notifyListeners();
+  }
 }
