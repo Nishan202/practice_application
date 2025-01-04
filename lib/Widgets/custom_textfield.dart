@@ -17,6 +17,7 @@ class CustomTextfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       minLines: minimuLine,
       maxLines: maximumLine,
       keyboardType: inputType,

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:practice_application/Widgets/custom_button.dart';
 import 'package:practice_application/Widgets/custom_textfield.dart';
 import 'package:practice_application/db/data_model.dart';
 import 'package:practice_application/db/db_helper.dart';
@@ -73,8 +74,8 @@ class _ModalBottomsheetState extends State<ModalBottomsheet> {
               OutlinedButton(onPressed: () async {
                 bool check = await dbHelper.addNote(newNote: DataModel(title: titleController.text, description: desController.text));
                 if(check){
-                  getNotes();
                   log(check.toString());
+                  getNotes();
                   Navigator.pop(context);
                 }
               }, child: Text('Add')),

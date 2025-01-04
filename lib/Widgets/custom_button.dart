@@ -2,14 +2,24 @@ import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
   final String title;
-  // final VoidCallback onTap;
+  final VoidCallback onClick;
   final bool loading;
-  const CustomButton({super.key, required this.title, this.loading=false,});
+  const CustomButton({super.key, required this.title, this.loading=false, required this.onClick});
+
+  static ButtonStyle buttonPrimary = OutlinedButton.styleFrom(
+    foregroundColor: Colors.green,
+    side: const BorderSide(color: Colors.green),
+    minimumSize: const Size(335, 45),
+    elevation: 0,
+    shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(50))
+    )
+);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      // onTap: onTap,
+      onTap: onClick,
       child: Container(
         height: 50,
         decoration: BoxDecoration(
