@@ -59,6 +59,101 @@ class _DbDataFetchState extends State<DbDataFetch> {
                             onPressed: () {
                               // dbHelper.updateNote(updateNote: DataModel(id: mData[index].id, title: updatedTitle.text, description: updatedDesc.text));
                               // getNotes();
+
+                              // This is for fetch current data in textfield
+                              titleController.text = mData[index].title;
+                              desController.text = mData[index].description;
+             
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (_) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(11),
+                                    width: double.infinity,
+                                    child: Column(
+                                      children: [
+                                        const Text(
+                                          'Add Note',
+                                          style: TextStyle(fontSize: 25),
+                                        ),
+                                        const SizedBox(
+                                          height: 11,
+                                        ),
+                                        TextField(
+                                          controller: titleController,
+                                          decoration: InputDecoration(
+                                            hintText: "Enter title here..",
+                                            label: const Text('Title'),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(11),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(11),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 11,
+                                        ),
+                                        TextField(
+                                          controller: desController,
+                                          minLines: 4,
+                                          maxLines: 6,
+                                          decoration: InputDecoration(
+                                            hintText: "Enter desc here..",
+                                            label: const Text('Desc'),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(11),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(11),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 11,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            OutlinedButton(
+                                              onPressed: () async {
+                                                bool check =
+                                                    await dbHelper.updateNote(
+                                                  updateNote: DataModel(
+                                                      title:
+                                                          // mData[index].title,
+                                                          titleController.text,
+                                                      description:
+                                                          // mData[index].description,
+                                                          desController.text,
+                                                      id: mData[index].id),
+                                                );
+                                                if (check) {
+                                                  getNotes();
+                                                  Navigator.pop(context);
+                                                }
+                                              },
+                                              child: const Text('Save'),
+                                            ),
+                                            OutlinedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('Cancel'),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
                             },
                             icon: const Icon(Icons.edit)),
                         IconButton(
@@ -81,8 +176,8 @@ class _DbDataFetchState extends State<DbDataFetch> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // titleController.clear();
-          // desController.clear;
+          titleController.clear();
+          desController.clear();
           // dbHelper.addNote(
           //     noteTitle: "New Note", noteDescription: "new not description");
           // getNotes();
@@ -90,7 +185,7 @@ class _DbDataFetchState extends State<DbDataFetch> {
             context: context,
             builder: (_) {
               return Container(
-                padding: const  EdgeInsets.all(11),
+                padding: const EdgeInsets.all(11),
                 width: double.infinity,
                 child: Column(
                   children: [
@@ -141,9 +236,10 @@ class _DbDataFetchState extends State<DbDataFetch> {
                         OutlinedButton(
                           onPressed: () async {
                             bool check = await dbHelper.addNote(
-                                newNote: DataModel(
-                                    title: titleController.text,
-                                    description: desController.text));
+                              newNote: DataModel(
+                                  title: titleController.text,
+                                  description: desController.text),
+                            );
                             if (check) {
                               getNotes();
                               Navigator.pop(context);

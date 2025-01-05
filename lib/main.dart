@@ -9,18 +9,22 @@ import 'package:practice_application/Screens/note_home_screen.dart';
 import 'package:practice_application/Screens/registration_screen.dart';
 import 'package:practice_application/Screens/whatsapp_screen.dart';
 import 'package:practice_application/Widgets/modal_bottomsheet.dart';
+import 'package:practice_application/db/db_helper.dart';
 import 'package:practice_application/state_management/data_provider.dart';
+import 'package:practice_application/state_management/db_provider.dart';
 import 'package:practice_application/state_management/list_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  // runApp(const MyApp());
   // runApp(ChangeNotifierProvider(create: (context)=> ListProvider(), child: const MyApp(),));
+
   // Multi provider
-  // runApp(MultiProvider(providers: [
-  //   ChangeNotifierProvider(create: (context) => DataProvider()),
-  //   ChangeNotifierProvider(create: (context) => ListProvider())
-  // ], child: const MyApp(),),);
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => DataProvider()),
+    ChangeNotifierProvider(create: (context) => ListProvider()),
+    ChangeNotifierProvider(create: (context) => DbProvider(dbHelper: DBHelper.getInstense()))
+  ], child: const MyApp(),),);
 }
 
 class MyApp extends StatelessWidget {
@@ -36,7 +40,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: DbDataFetch()
+      home: NoteHomeScreen()
     );
   }
 }

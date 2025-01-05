@@ -3,20 +3,21 @@ import 'package:practice_application/Widgets/custom_button.dart';
 import 'package:practice_application/Widgets/custom_textfield.dart';
 import 'package:practice_application/db/data_model.dart';
 import 'package:practice_application/state_management/db_provider.dart';
-import 'package:practice_application/state_management/list_provider.dart';
 import 'package:provider/provider.dart';
 
-class AddNoteScreen extends StatelessWidget {
-  const AddNoteScreen({super.key});
+class UpdateNoteScreen extends StatelessWidget {
+  const UpdateNoteScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController tController = TextEditingController();
-    TextEditingController dController = TextEditingController();
+    var mData = context.read<DbProvider>().getData();
+    
+    TextEditingController titleController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Note'),
+        title: const Text('Update Note'),
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -26,7 +27,7 @@ class AddNoteScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 10,),
             CustomTextfield(
-              controller: tController,
+              controller: titleController,
               hint: 'Enter note title',
               labelText: 'Title',
               inputType: TextInputType.text,
@@ -35,7 +36,7 @@ class AddNoteScreen extends StatelessWidget {
               height: 16,
             ),
             CustomTextfield(
-              controller: dController,
+              controller: descriptionController,
               hint: 'Enter note details',
               labelText: 'Description',
               inputType: TextInputType.text,
@@ -52,10 +53,10 @@ class AddNoteScreen extends StatelessWidget {
                 // );
 
                 // Add note through Database Provider
-                context.read<DbProvider>().addData(aData: DataModel(title: tController.text, description: dController.text),);
+                context.read<DbProvider>().updateData(uData: DataModel(title: titleController.text, description: descriptionController.text),);
                 Navigator.pop(context);
               },
-              title: 'Add',
+              title: 'Save',
             ),
           ],
         ),
