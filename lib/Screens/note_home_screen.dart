@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:practice_application/Screens/add_note_screen.dart';
+import 'package:practice_application/Screens/update_note_screen.dart';
 import 'package:practice_application/db/data_model.dart';
+import 'package:practice_application/db/db_helper.dart';
+import 'package:practice_application/state_management/data_provider.dart';
 import 'package:practice_application/state_management/db_provider.dart';
 import 'package:practice_application/state_management/list_provider.dart';
 import 'package:provider/provider.dart';
 
-class NoteHomeScreen extends StatelessWidget {
+class NoteHomeScreen extends StatefulWidget {
   const NoteHomeScreen({super.key});
 
-  // List<DataModel> mData = [];
+  @override
+  State<NoteHomeScreen> createState() => _NoteHomeScreenState();
+}
+
+class _NoteHomeScreenState extends State<NoteHomeScreen> {
+
+  @override
+  void initState(){
+    super.initState();
+    context.read<DbProvider>().fetchInitialData();
+  }
   @override
   Widget build(BuildContext context) {
-    // List<DataModel> mData = [];
-    TextEditingController titleController = TextEditingController();
 
+    TextEditingController titleController = TextEditingController();
     TextEditingController desController = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notes'),
@@ -54,99 +67,107 @@ class NoteHomeScreen extends StatelessWidget {
 
                                 // update data through Database Provider
                                 // context.read<DbProvider>().updateData(uData: DataModel(title: mData[index].title, description: mData[index].description, id: mData[index].id),);
+
                                 // This is for fetch current data in textfield
                                 titleController.text = mData[index].title;
                                 desController.text = mData[index].description;
 
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (_) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(11),
-                                      width: double.infinity,
-                                      child: Column(
-                                        children: [
-                                          const Text(
-                                            'Add Note',
-                                            style: TextStyle(fontSize: 25),
-                                          ),
-                                          const SizedBox(
-                                            height: 11,
-                                          ),
-                                          TextField(
-                                            controller: titleController,
-                                            decoration: InputDecoration(
-                                              hintText: "Enter title here..",
-                                              label: const Text('Title'),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(11),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(11),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 11,
-                                          ),
-                                          TextField(
-                                            controller: desController,
-                                            minLines: 4,
-                                            maxLines: 6,
-                                            decoration: InputDecoration(
-                                              hintText: "Enter desc here..",
-                                              label: const Text('Desc'),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(11),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(11),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 11,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              OutlinedButton(
-                                                onPressed: () {
-                                                  context
-                                                      .read<DbProvider>()
-                                                      .updateData(
-                                                        uData: DataModel(
-                                                            title:
-                                                                titleController
-                                                                    .text,
-                                                            description:
-                                                                desController
-                                                                    .text,
-                                                            id: mData[index]
-                                                                .id),
-                                                      );
-                                                      Navigator.pop(context);
-                                                },
-                                                child: const Text('Save'),
-                                              ),
-                                              OutlinedButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text('Cancel'),
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  },
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UpdateNoteScreen(dataModel: DataModel(title: titleController.text, description: desController.text, id: mData[index].id),)
+                                  ),
                                 );
+
+                                // showModalBottomSheet(
+                                //   context: context,
+                                //   builder: (_) {
+                                //     return Container(
+                                //       padding: const EdgeInsets.all(11),
+                                //       width: double.infinity,
+                                //       child: Column(
+                                //         children: [
+                                //           const Text(
+                                //             'Add Note',
+                                //             style: TextStyle(fontSize: 25),
+                                //           ),
+                                //           const SizedBox(
+                                //             height: 11,
+                                //           ),
+                                //           TextField(
+                                //             controller: titleController,
+                                //             decoration: InputDecoration(
+                                //               hintText: "Enter title here..",
+                                //               label: const Text('Title'),
+                                //               focusedBorder: OutlineInputBorder(
+                                //                 borderRadius:
+                                //                     BorderRadius.circular(11),
+                                //               ),
+                                //               enabledBorder: OutlineInputBorder(
+                                //                 borderRadius:
+                                //                     BorderRadius.circular(11),
+                                //               ),
+                                //             ),
+                                //           ),
+                                //           const SizedBox(
+                                //             height: 11,
+                                //           ),
+                                //           TextField(
+                                //             controller: desController,
+                                //             minLines: 4,
+                                //             maxLines: 6,
+                                //             decoration: InputDecoration(
+                                //               hintText: "Enter desc here..",
+                                //               label: const Text('Desc'),
+                                //               focusedBorder: OutlineInputBorder(
+                                //                 borderRadius:
+                                //                     BorderRadius.circular(11),
+                                //               ),
+                                //               enabledBorder: OutlineInputBorder(
+                                //                 borderRadius:
+                                //                     BorderRadius.circular(11),
+                                //               ),
+                                //             ),
+                                //           ),
+                                //           const SizedBox(
+                                //             height: 11,
+                                //           ),
+                                //           Row(
+                                //             mainAxisAlignment:
+                                //                 MainAxisAlignment.spaceEvenly,
+                                //             children: [
+                                //               OutlinedButton(
+                                //                 onPressed: () {
+                                //                   context
+                                //                       .read<DbProvider>()
+                                //                       .updateData(
+                                //                         uData: DataModel(
+                                //                             title:
+                                //                                 titleController
+                                //                                     .text,
+                                //                             description:
+                                //                                 desController
+                                //                                     .text,
+                                //                             id: mData[index]
+                                //                                 .id),
+                                //                       );
+                                //                       Navigator.pop(context);
+                                //                 },
+                                //                 child: const Text('Save'),
+                                //               ),
+                                //               OutlinedButton(
+                                //                 onPressed: () {
+                                //                   Navigator.pop(context);
+                                //                 },
+                                //                 child: const Text('Cancel'),
+                                //               )
+                                //             ],
+                                //           )
+                                //         ],
+                                //       ),
+                                //     );
+                                //   },
+                                // );
                               },
                               icon: const Icon(Icons.edit),
                             ),

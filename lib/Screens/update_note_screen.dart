@@ -6,14 +6,20 @@ import 'package:practice_application/state_management/db_provider.dart';
 import 'package:provider/provider.dart';
 
 class UpdateNoteScreen extends StatelessWidget {
-  const UpdateNoteScreen({super.key});
+  DataModel dataModel;
+  // VoidCallback onTap;
+  UpdateNoteScreen({required this.dataModel});
 
   @override
   Widget build(BuildContext context) {
-    var mData = context.read<DbProvider>().getData();
+    // var mData = context.read<DbProvider>().getData();
     
     TextEditingController titleController = TextEditingController();
     TextEditingController descriptionController = TextEditingController();
+
+    // This is for fetch current data in textfield
+    titleController.text = dataModel.title;
+    descriptionController.text = dataModel.description;
 
     return Scaffold(
       appBar: AppBar(
@@ -45,15 +51,8 @@ class UpdateNoteScreen extends StatelessWidget {
               height: 40,
             ),
             CustomButton(
-              onClick: () {
-                // add note through List provider
-                // context.read<ListProvider>().addData(
-                //     noteTitle: tController.text,
-                //     noteDescription: dController.text
-                // );
-
-                // Add note through Database Provider
-                context.read<DbProvider>().updateData(uData: DataModel(title: titleController.text, description: descriptionController.text),);
+              onClick: (){
+                context.read<DbProvider>().updateData(uData: DataModel(title: titleController.text, description: descriptionController.text, id: dataModel.id),);
                 Navigator.pop(context);
               },
               title: 'Save',
